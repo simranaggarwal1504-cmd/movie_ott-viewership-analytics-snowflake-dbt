@@ -1,0 +1,39 @@
+version: 2
+models:
+  - name: dim_user
+    description: One row per subscriber, with decoded age band and occupation.
+    columns:
+      - name: user_key
+        tests: [unique, not_null]
+
+  - name: dim_content
+    description: One row per title, with parsed release year and primary genre.
+    columns:
+      - name: content_key
+        tests: [unique, not_null]
+
+  - name: dim_date
+    description: Calendar dimension covering the event window.
+    columns:
+      - name: date_key
+        tests: [unique, not_null]
+
+  - name: fact_views
+    description: One row per viewing event (grain = event).
+    columns:
+      - name: user_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_user')
+              field: user_key
+      - name: content_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_content')
+              field: content_key
+      - name: event_type
+        tests:
+          - accepted_values:
+              values: ['complete', 'partial', 'abandoned']

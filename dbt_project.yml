@@ -1,0 +1,17 @@
+name: 'ott_analytics'
+version: '1.0.0'
+profile: 'ott_analytics'
+
+model-paths: ["models"]
+macro-paths: ["macros"]
+target-path: "target"
+clean-targets: ["target", "dbt_packages"]
+
+models:
+  ott_analytics:
+    staging:
+      +materialized: view
+      +schema: STAGING
+    marts:
+      +materialized: table
+      +schema: MART

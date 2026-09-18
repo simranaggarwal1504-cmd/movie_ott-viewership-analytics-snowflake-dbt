@@ -1,0 +1,10 @@
+version: 2
+sources:
+  - name: raw
+    database: OTT_ANALYTICS
+    schema: RAW
+    tables:
+      - name: ratings
+      - name: users
+      - name: movies
+      - name: events
