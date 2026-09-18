@@ -34,6 +34,45 @@ Kaggle (MovieLens 1M) + synthetic JSON viewership events
 - Tests (`models/marts/_schema.yml`): `unique` + `not_null` on dimension keys,
   `relationships` (referential integrity fact → dims), `accepted_values` on `event_type`.
 
+## Lineage
+
+The dbt DAG (also browsable via `dbt docs serve`):
+
+```mermaid
+flowchart TD
+  subgraph RAW["RAW — sources"]
+    R1[ratings]
+    R2[users]
+    R3[movies]
+    R4[events • JSON]
+  end
+  subgraph STG["STAGING — views"]
+    S1[stg_ratings]
+    S2[stg_users]
+    S3[stg_movies]
+    S4[stg_events]
+  end
+  subgraph MART["MART — star schema"]
+    D1[dim_user]
+    D2[dim_content]
+    D3[dim_date]
+    F[(fact_views)]
+  end
+  R1 --> S1
+  R2 --> S2
+  R3 --> S3
+  R4 --> S4
+  S2 --> D1
+  S3 --> D2
+  S4 --> F
+  D1 --> F
+  D2 --> F
+  D3 --> F
+```
+
+> Tip: you can also drop a screenshot of the `dbt docs` lineage graph into `docs/lineage.png`
+> and reference it here for the real rendered view.
+
 ## Run it
 ```bash
 # set your Snowflake password for the session
